@@ -6,7 +6,13 @@
 #ifndef DYNAMIXEL_H
 #define DYNAMIXEL_H
 
-#include <Arduino.h>
+#include <cstdint>
+#include <stdlib.h>
+#include <exception>
+#include <unistd.h>			//Used for UART
+#include <fcntl.h>			//Used for UART
+#include <termios.h>		//Used for UART
+
 
 /** \brief Type of dynamixel device ID */
 typedef uint8_t DynamixelID;
@@ -147,13 +153,13 @@ class DynamixelInterface
 };
 
 /** \brief Create dynamixel interface from hardware uart */
-DynamixelInterface *createSerialInterface(HardwareSerial &aSerial);
+DynamixelInterface *createSerialInterface(char *serialPort);
 /** \brief Create dynamixel interface from hardware uart with direction port connected to a 3-state buffer */
-DynamixelInterface *createSerialInterface(HardwareSerial &aSerial, uint8_t aDirectionPin);
+DynamixelInterface *createSerialInterface(char *serialPort, uint8_t aDirectionPin);
 /** \brief Create dynamixel interface from software uart (need SoftwareSerial) */
-DynamixelInterface *createSoftSerialInterface(uint8_t aRxPin, uint8_t aTxPin);
+DynamixelInterface *createSoftSerialInterface(char *serialPort);
 /** \brief Create dynamixel interface from software uart with direction port connected to a 3-state buffer (need SoftwareSerial) */
-DynamixelInterface *createSoftSerialInterface(uint8_t aRxPin, uint8_t aTxPin, uint8_t aDirectionPin);
+DynamixelInterface *createSoftSerialInterface(char *serialPort, uint8_t aDirectionPin);
 
 
 /**

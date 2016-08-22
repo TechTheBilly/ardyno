@@ -1,113 +1,58 @@
 
 #include "DynamixelInterface.h"
-#include <SoftwareSerial.h>
 
-#if __AVR__
-// define TXEN, RXEN and RXCIE
-#if !defined(TXEN)
-#if defined(TXEN0)
-#define TXEN TXEN0
-#define RXEN RXEN0
-#define RXCIE RXCIE0
-#elif defined(TXEN1) // Some devices have uart1 but no uart0 (leonardo)
-#define TXEN TXEN1
-#define RXEN RXEN1
-#define RXCIE RXCIE1
-#endif
-#endif
-#endif //__AVR__
 
-DynamixelInterface *createSerialInterface(HardwareSerial &aSerial)
+DynamixelInterface *createSerialInterface(char *serialPort)
 {
-	return new DynamixelInterfaceImpl<HardwareSerial>(aSerial);
+	return new DynamixelInterfaceImpl<HardwareSerial>(serialPort);
 }
 
-DynamixelInterface *createSerialInterface(HardwareSerial &aSerial, uint8_t aDirectionPin)
+DynamixelInterface *createSerialInterface(char *serialPort, uint8_t aDirectionPin)
 {
-	return new DynamixelInterfaceImpl<HardwareSerial>(aSerial, aDirectionPin);
+	return new DynamixelInterfaceImpl<HardwareSerial>(serialPort, aDirectionPin);
 }
 
 
 namespace
 {
-class DynSoftwareSerial:public SoftwareSerial
+class DynSoftwareSerial
 {
 	public:
-	DynSoftwareSerial(uint8_t aRxPin, uint8_t aTxPin):
-		SoftwareSerial(aRxPin, aTxPin), mTxPin(aTxPin)
-	{}
-	
-	void enableTx(){pinMode(mTxPin, OUTPUT);}
-	void disableTx(){pinMode(mTxPin, INPUT);}
-	
+	DynSoftwareSerial(char *serialPort):
+		serialPort(serialPort)
+	{
+        fileStream = open(serialPort, O_RDWR | O_NOCTTY | O_NDELAY);		//Open in non blocking read/write mode
+        if (fileStream == -1)
+        {
+            //ERROR - CAN'T OPEN SERIAL PORT
+            throw new std::exception();
+        }
+        struct termios options;
+        tcgetattr(fileStream, &options);
+        options.c_cflag = B9600 | CS8 | CLOCAL | CREAD;		//<Set baud rate
+        options.c_iflag = IGNPAR;
+        options.c_oflag = 0;
+        options.c_lflag = 0;
+        tcflush(fileStream, TCIFLUSH);
+        tcsetattr(fileStream, TCSANOW, &options);
+	}
+
 	private:
-	uint8_t mTxPin;
+	char * serialPort;
+    int fileStream = -1;
 };
 }
-DynamixelInterface *createSoftSerialInterface(uint8_t aRxPin, uint8_t aTxPin)
+DynamixelInterface *createSoftSerialInterface(char *serialPort)
 {
-	DynSoftwareSerial &serial=*new DynSoftwareSerial(aRxPin, aTxPin);
+	DynSoftwareSerial &serial=*new DynSoftwareSerial(serialPort);
 	return new DynamixelInterfaceImpl<DynSoftwareSerial>(serial, DynamixelInterfaceImpl<DynSoftwareSerial>::NO_DIR_PORT, true);
 }
 
-DynamixelInterface *createSoftSerialInterface(uint8_t aRxPin, uint8_t aTxPin, uint8_t aDirectionPin)
+DynamixelInterface *createSoftSerialInterface(char *serialPort, uint8_t aDirectionPin)
 {
-	DynSoftwareSerial &serial=*new DynSoftwareSerial(aRxPin, aTxPin);
+	DynSoftwareSerial &serial=*new DynSoftwareSerial(serialPort);
 	return new DynamixelInterfaceImpl<DynSoftwareSerial>(serial, aDirectionPin, true);
 }
-
-#if __AVR__
-namespace {
-//dirty trick to access protected member
-class HardwareSerialAccess:public HardwareSerial
-{
-	public:
-	volatile uint8_t * const ucsrb(){return _ucsrb;}
-};
-}
-
-template<>
-void setReadMode<HardwareSerial>(HardwareSerial &aStream)
-{
-	HardwareSerialAccess &stream=reinterpret_cast<HardwareSerialAccess&>(aStream);
-	*(stream.ucsrb()) &= ~_BV(TXEN);
-	*(stream.ucsrb()) |= _BV(RXEN);
-	*(stream.ucsrb()) |= _BV(RXCIE);
-}
-
-template<>
-void setWriteMode<HardwareSerial>(HardwareSerial &aStream)
-{
-	HardwareSerialAccess &stream=reinterpret_cast<HardwareSerialAccess&>(aStream);
-	*(stream.ucsrb()) &= ~_BV(RXEN);
-	*(stream.ucsrb()) |= _BV(RXCIE);
-	*(stream.ucsrb()) |= _BV(TXEN);
-}
-
-#elif __arc__
-
-//Arduino 101 specific code
-
-template<>
-void setReadMode<HardwareSerial>(HardwareSerial &aStream)
-{
-	//enable pull up to avoid noise on the line
-	pinMode(1, INPUT);
-	digitalWrite(1, HIGH);
-	// disconnect UART TX and connect UART RX
-	SET_PIN_MODE(16, GPIO_MUX_MODE);
-	SET_PIN_MODE(17, UART_MUX_MODE);
-}
-
-template<>
-void setWriteMode<HardwareSerial>(HardwareSerial &aStream)
-{
-	// disconnect UART RX and connect UART TX
-	SET_PIN_MODE(17, GPIO_MUX_MODE);
-	SET_PIN_MODE(16, UART_MUX_MODE);
-}
-
-#endif
 
 
 template<>

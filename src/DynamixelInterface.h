@@ -3,7 +3,6 @@
 #ifndef DYNAMIXEL_INTERFACE_H
 #define DYNAMIXEL_INTERFACE_H
 
-#include <Arduino.h>
 #include "Dynamixel.h"
 
 
