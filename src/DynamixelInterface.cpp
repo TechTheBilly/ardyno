@@ -15,26 +15,13 @@ DynamixelInterface *createSerialInterface(char *serialPort, uint8_t aDirectionPi
 
 namespace
 {
-class DynSoftwareSerial
+class DynSoftwareSerial : public SerialInterface
 {
 	public:
 	DynSoftwareSerial(char *serialPort):
-		serialPort(serialPort)
+		SerialInterface(serialPort)
 	{
-        fileStream = open(serialPort, O_RDWR | O_NOCTTY | O_NDELAY);		//Open in non blocking read/write mode
-        if (fileStream == -1)
-        {
-            //ERROR - CAN'T OPEN SERIAL PORT
-            throw new std::exception();
-        }
-        struct termios options;
-        tcgetattr(fileStream, &options);
-        options.c_cflag = B9600 | CS8 | CLOCAL | CREAD;		//<Set baud rate
-        options.c_iflag = IGNPAR;
-        options.c_oflag = 0;
-        options.c_lflag = 0;
-        tcflush(fileStream, TCIFLUSH);
-        tcsetattr(fileStream, TCSANOW, &options);
+
 	}
 
 	private:

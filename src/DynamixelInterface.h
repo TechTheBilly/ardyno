@@ -4,6 +4,7 @@
 #define DYNAMIXEL_INTERFACE_H
 
 #include "Dynamixel.h"
+#include "SerialInterface.hpp"
 
 
 template<class T>

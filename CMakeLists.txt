@@ -11,6 +11,6 @@ set(SOURCE_FILES
     src/DynamixelInterface.cpp
     src/DynamixelInterface.h
     src/DynamixelMotor.cpp
-    src/DynamixelMotor.h)
+    src/DynamixelMotor.h src/SerialInterface.cpp src/SerialInterface.hpp)
 
 add_executable(ardyno ${SOURCE_FILES})
