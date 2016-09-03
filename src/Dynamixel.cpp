@@ -184,8 +184,4 @@ void writePin(int pin, bool high)
     system((std::string("echo "+ std::string(high ? "1" : "0") +" > /sys/class/gpio/gpio")+std::to_string(pin)+"/value").c_str());
 }
 
-int main()
-{
-
-}
 

@@ -16,6 +16,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <stdlib.h>
 #include <exception>
 #include <unistd.h>			//Used for UART
 #include <fcntl.h>			//Used for UART
