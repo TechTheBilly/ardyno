@@ -32,22 +32,51 @@ void SerialInterface::setTimeout(int time)
     timeout = time;
 }
 
-void SerialInterface::write(char byte)
+void SerialInterface::writeByte(uint8_t byte)
 {
-
+    uint8_t count = write(fileStream, &byte, 1);
+    if(count < 0)
+        std::cout << "Can't write in Serial Port !" << std::endl;
 }
 
-char SerialInterface::read()
+char SerialInterface::readByte()
 {
-    return 0;
+    uint8_t res = 0;
+
+    uint8_t count = read(fileStream, &res, 1);
+    if(count < 0)
+        std::cout << "Can't read in Serial Port !" << std::endl;
+    if(count == 0)
+        std::cout << "No data avail." << std::endl;
+
+    return res;
 }
 
 void SerialInterface::flush()
 {
-
+    //UNUSED
 }
 
-int SerialInterface::readBytes(char * buffer, int nb)
+int SerialInterface::readBytes(uint8_t * buffer, int nb)
 {
-    return 0;
+    int count = read(fileStream, buffer, nb);
+
+    if(count < 0)
+        std::cout << "Can't read in Serial Port !" << std::endl;
+    if(count == 0)
+        std::cout << "No data avail." << std::endl;
+
+    return count;
+}
+
+void SerialInterface::closeSerial()
+{
+    close(fileStream);
+}
+
+int SerialInterface::writeBytes(uint8_t * buffer, int nb) {
+    uint8_t count = write(fileStream, buffer, nb);
+    if (count < 0)
+        std::cout << "Can't write in Serial Port !" << std::endl;
+    return count;
 }

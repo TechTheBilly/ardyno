@@ -158,4 +158,34 @@ DynamixelStatus DynamixelInterface::reset(uint8_t aID, uint8_t aStatusReturnLeve
 	return mPacket.mStatus;
 }
 
+/**
+ * Set mode for pin ; ONLY RASPBERRY PI
+ * @param pin number
+ * @param out is out ?
+ */
+void setMode(int pin, bool out)
+{
+    system(("echo "+ std::to_string(pin) +" > /sys/class/gpio/export").c_str());
+
+    if(out)
+    {
+        system((std::string("echo 'out' > /sys/class/gpio/gpio")+std::to_string(pin)+"/direction").c_str());
+    }
+    else
+    {
+        system((std::string("echo 'in' > /sys/class/gpio/gpio")+std::to_string(pin)+"/direction").c_str());
+    }
+}
+
+void writePin(int pin, bool high)
+{
+    system(("echo "+ std::to_string(pin) +" > /sys/class/gpio/export").c_str());
+
+    system((std::string("echo "+ std::string(high ? "1" : "0") +" > /sys/class/gpio/gpio")+std::to_string(pin)+"/value").c_str());
+}
+
+int main()
+{
+
+}
 

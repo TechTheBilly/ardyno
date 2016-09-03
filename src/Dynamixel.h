@@ -6,8 +6,16 @@
 #ifndef DYNAMIXEL_H
 #define DYNAMIXEL_H
 
+#define LOW false
+#define HIGH true
+#define INPUT false
+#define OUTPUT true
+
 #include <cstdint>
-#include <stdlib.h>
+#include <cstring>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <exception>
 #include <unistd.h>			//Used for UART
 #include <fcntl.h>			//Used for UART
@@ -302,5 +310,14 @@ DynamixelStatus DynamixelInterface::regWrite(uint8_t aID, uint8_t aAddress, cons
 {
 	return regWrite(aID, aAddress, uint8_t(sizeof(T)), (const uint8_t*)aData, aStatusReturnLevel);
 }
+
+/**
+ * Set mode for pin ; ONLY RASPBERRY PI
+ * @param pin number
+ * @param out is out ?
+ */
+void setMode(int pin, bool out);
+
+void writePin(int pin, bool high);
 
 #endif

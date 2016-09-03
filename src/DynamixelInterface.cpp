@@ -4,12 +4,14 @@
 
 DynamixelInterface *createSerialInterface(char *serialPort)
 {
-	return new DynamixelInterfaceImpl<HardwareSerial>(serialPort);
+    SerialInterface s(serialPort);
+	return new DynamixelInterfaceImpl<SerialInterface>(s);
 }
 
 DynamixelInterface *createSerialInterface(char *serialPort, uint8_t aDirectionPin)
 {
-	return new DynamixelInterfaceImpl<HardwareSerial>(serialPort, aDirectionPin);
+    SerialInterface s(serialPort);
+    return new DynamixelInterfaceImpl<SerialInterface>(s, aDirectionPin);
 }
 
 
@@ -20,15 +22,10 @@ class DynSoftwareSerial : public SerialInterface
 	public:
 	DynSoftwareSerial(char *serialPort):
 		SerialInterface(serialPort)
-	{
-
-	}
-
-	private:
-	char * serialPort;
-    int fileStream = -1;
+	{}
 };
 }
+
 DynamixelInterface *createSoftSerialInterface(char *serialPort)
 {
 	DynSoftwareSerial &serial=*new DynSoftwareSerial(serialPort);
@@ -45,15 +42,15 @@ DynamixelInterface *createSoftSerialInterface(char *serialPort, uint8_t aDirecti
 template<>
 void setReadMode<DynSoftwareSerial>(DynSoftwareSerial &aStream)
 {
-	aStream.disableTx();
-	aStream.listen();
+	//aStream.disableTx();
+	//aStream.listen();
 }
 
 template<>
 void setWriteMode<DynSoftwareSerial>(DynSoftwareSerial &aStream)
 {
-	aStream.stopListening();
-	aStream.enableTx();
+	//aStream.stopListening();
+	//aStream.enableTx();
 }
 
 

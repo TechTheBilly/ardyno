@@ -6,8 +6,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(SOURCE_FILES
     src/Dynamixel.cpp
     src/Dynamixel.h
-    src/DynamixelConsole.cpp
-    src/DynamixelConsole.h
+#    src/DynamixelConsole.cpp
+#    src/DynamixelConsole.h
     src/DynamixelInterface.cpp
     src/DynamixelInterface.h
     src/DynamixelMotor.cpp

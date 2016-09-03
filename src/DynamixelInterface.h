@@ -3,7 +3,6 @@
 #ifndef DYNAMIXEL_INTERFACE_H
 #define DYNAMIXEL_INTERFACE_H
 
-#include "Dynamixel.h"
 #include "SerialInterface.hpp"
 
 
@@ -23,11 +22,11 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 	{
 		if(mDirectionPin!=NO_DIR_PORT)
 		{
-			digitalWrite(mDirectionPin, LOW);
+			writePin(mDirectionPin, LOW);
 		}
 		else
 		{
-			setReadMode(mStream);
+		//	setReadMode(mStream);
 		}
 	}
 	
@@ -36,11 +35,11 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 	{
 		if(mDirectionPin!=NO_DIR_PORT)
 		{
-			digitalWrite(mDirectionPin, HIGH);
+			writePin(mDirectionPin, HIGH);
 		}
 		else
 		{
-			setWriteMode(mStream);
+			//setWriteMode(mStream);
 		}
 	}
 	
@@ -57,8 +56,8 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 	{
 		if(mDirectionPin!=NO_DIR_PORT)
 		{
-			digitalWrite(mDirectionPin, LOW);
-			pinMode(mDirectionPin, OUTPUT);
+			writePin(mDirectionPin, LOW);
+			setMode(mDirectionPin, OUTPUT);
 		}
 	}
 	
@@ -95,40 +94,40 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 	{
 		writeMode();
 	
-		mStream.write(0xFF);
-		mStream.write(0xFF);
-		mStream.write(aPacket.mID);
-		mStream.write(aPacket.mLength);
-		mStream.write(aPacket.mInstruction);
+		mStream.writeByte(0xFF);
+		mStream.writeByte(0xFF);
+		mStream.writeByte(aPacket.mID);
+		mStream.writeByte(aPacket.mLength);
+		mStream.writeByte(aPacket.mInstruction);
 		uint8_t n=0;
 		if(aPacket.mAddress!=255)
 		{
-			mStream.write(aPacket.mAddress);
+			mStream.writeByte(aPacket.mAddress);
 			++n;
 		}
 		if(aPacket.mDataLength!=255)
 		{
-			mStream.write(aPacket.mDataLength);
+			mStream.writeByte(aPacket.mDataLength);
 			++n;
 		}
 		if(aPacket.mLength>(2+n))
 		{
 			if(aPacket.mIDListSize==0)
 			{
-				mStream.write(aPacket.mData, aPacket.mLength-2-n);
+				mStream.writeBytes(aPacket.mData, aPacket.mLength-2-n);
 			}
 			else
 			{
 				uint8_t *ptr=aPacket.mData;
 				for(uint8_t i=0; i<aPacket.mIDListSize; ++i)
 				{
-					mStream.write(aPacket.mIDList[i]);
-					mStream.write(ptr, aPacket.mDataLength);
+					mStream.writeByte(aPacket.mIDList[i]);
+					mStream.writeBytes(ptr, aPacket.mDataLength);
 					ptr+=aPacket.mDataLength;
 				}
 			}
 		}
-		mStream.write(aPacket.mCheckSum);
+		mStream.writeByte(aPacket.mCheckSum);
 		mStream.flush();
 		readMode();
 	}
@@ -158,12 +157,12 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 		aPacket.mID=buffer[0];
 		aPacket.mLength=buffer[1];
 		aPacket.mStatus=buffer[2];
-		if(aPacket.mLength>2 && mStream.readBytes(reinterpret_cast<char*>(aPacket.mData), aPacket.mLength-2)<(aPacket.mLength-2))
+		if(aPacket.mLength>2 && mStream.readBytes(aPacket.mData, aPacket.mLength - 2) < (aPacket.mLength - 2))
 		{
 			aPacket.mStatus=DYN_STATUS_COM_ERROR | DYN_STATUS_TIMEOUT;
 			return;
 		}
-		if(mStream.readBytes(reinterpret_cast<char*>(&(aPacket.mCheckSum)),1)<1)
+		if(mStream.readBytes(&(aPacket.mCheckSum),1)<1)
 		{
 			aPacket.mStatus=DYN_STATUS_COM_ERROR | DYN_STATUS_TIMEOUT;
 			return;

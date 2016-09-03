@@ -5,9 +5,11 @@
 #ifndef ARDYNO_SERIALINTERFACE_HPP
 #define ARDYNO_SERIALINTERFACE_HPP
 
-#import "Dynamixel.h"
+#include "Dynamixel.h"
 
 class SerialInterface {
+
+public:
 
     SerialInterface(char *serialport);
 
@@ -15,15 +17,20 @@ class SerialInterface {
 
     void setTimeout(int);
 
-    void write(char);
+    void writeByte(uint8_t);
 
-    char read();
+    char readByte();
 
     void flush();
 
-    int readBytes(char*, int);
+    int readBytes(uint8_t *, int);
+
+    int writeBytes(uint8_t *, int);
+
+    void closeSerial();
 
 private:
+
     char * serialPort;
     int fileStream = -1;
     int timeout = -1;
