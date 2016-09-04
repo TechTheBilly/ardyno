@@ -37,6 +37,12 @@ void SerialInterface::writeByte(uint8_t byte)
     uint8_t count = write(fileStream, &byte, 1);
     if(count < 0)
         std::cout << "Can't write in Serial Port !" << std::endl;
+
+    uint8_t res = 0;
+    count = read(fileStream, &res, 1);
+    if(count < 0)
+        std::cout << "Could not evacuate byte after write" << std::endl;
+
 }
 
 char SerialInterface::readByte()
@@ -78,5 +84,11 @@ int SerialInterface::writeBytes(uint8_t * buffer, int nb) {
     uint8_t count = write(fileStream, buffer, nb);
     if (count < 0)
         std::cout << "Can't write in Serial Port !" << std::endl;
+
+    uint8_t * buf;
+    int count2 = read(fileStream, buf, nb);
+    if(count2 < 0 || count != count2)
+        std::cout << "Could not evacuate all bytes after write" << std::endl;
+
     return count;
 }
