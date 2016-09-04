@@ -4,14 +4,14 @@
 
 DynamixelInterface *createSerialInterface(char *serialPort)
 {
-    SerialInterface s(serialPort);
-	return new DynamixelInterfaceImpl<SerialInterface>(s);
+    SerialInterface *s = new SerialInterface(serialPort);
+	return new DynamixelInterfaceImpl<SerialInterface>(*s);
 }
 
 DynamixelInterface *createSerialInterface(char *serialPort, uint8_t aDirectionPin)
 {
-    SerialInterface s(serialPort);
-    return new DynamixelInterfaceImpl<SerialInterface>(s, aDirectionPin);
+	SerialInterface *s = new SerialInterface(serialPort);
+    return new DynamixelInterfaceImpl<SerialInterface>(*s, aDirectionPin);
 }
 
 

@@ -33,7 +33,7 @@ private:
 
     char * serialPort;
     int fileStream = -1;
-    int timeout = -1;
+    long timeout = 0;
 };
 
 

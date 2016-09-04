@@ -34,14 +34,14 @@ void SerialInterface::setTimeout(int time)
 
 void SerialInterface::writeByte(uint8_t byte)
 {
-    uint8_t count = write(fileStream, &byte, 1);
+    ssize_t count = write(fileStream, &byte, 1);
     if(count < 0)
         std::cout << "Can't write in Serial Port !" << std::endl;
 
-    uint8_t res = 0;
+ /*   uint8_t res = 0;
     count = read(fileStream, &res, 1);
     if(count < 0)
-        std::cout << "Could not evacuate byte after write" << std::endl;
+        std::cout << "Could not evacuate byte after write" << std::endl;*/
 
 }
 
@@ -49,7 +49,7 @@ char SerialInterface::readByte()
 {
     uint8_t res = 0;
 
-    uint8_t count = read(fileStream, &res, 1);
+    ssize_t count = read(fileStream, &res, 1);
     if(count < 0)
         std::cout << "Can't read in Serial Port !" << std::endl;
     if(count == 0)
@@ -65,14 +65,14 @@ void SerialInterface::flush()
 
 int SerialInterface::readBytes(uint8_t * buffer, int nb)
 {
-    int count = read(fileStream, buffer, nb);
+    ssize_t count = read(fileStream, buffer, (size_t) nb);
 
     if(count < 0)
         std::cout << "Can't read in Serial Port !" << std::endl;
     if(count == 0)
         std::cout << "No data avail." << std::endl;
 
-    return count;
+    return (int) count;
 }
 
 void SerialInterface::closeSerial()
@@ -81,14 +81,14 @@ void SerialInterface::closeSerial()
 }
 
 int SerialInterface::writeBytes(uint8_t * buffer, int nb) {
-    uint8_t count = write(fileStream, buffer, nb);
+    ssize_t count = write(fileStream, buffer, nb);
     if (count < 0)
         std::cout << "Can't write in Serial Port !" << std::endl;
 
-    uint8_t * buf;
-    int count2 = read(fileStream, buf, nb);
+   /* uint8_t * buf;
+    ssize_t count2 = read(fileStream, buf, nb);
     if(count2 < 0 || count != count2)
-        std::cout << "Could not evacuate all bytes after write" << std::endl;
+        std::cout << "Could not evacuate all bytes after write" << std::endl;*/
 
-    return count;
+    return (int) count;
 }

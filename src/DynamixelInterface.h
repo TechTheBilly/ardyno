@@ -80,8 +80,8 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 	void begin(unsigned long aBaud)
 	{
 		mStream.begin(aBaud);
-		mStream.setTimeout(50); //warning : response delay seems much higher than expected for some operation (eg writing eeprom)
-		readMode();
+		//mStream.setTimeout(50); //warning : response delay seems much higher than expected for some operation (eg writing eeprom)
+		//readMode();
 	}
 	
 	/**
