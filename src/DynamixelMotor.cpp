@@ -1,4 +1,4 @@
-#include "DynamixelMotor.h"
+#include "../include/DynamixelMotor.h"
 
 
 DynamixelMotor::DynamixelMotor(DynamixelInterface &aInterface, DynamixelID aId):

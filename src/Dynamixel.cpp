@@ -2,7 +2,7 @@
  * \file Dynamixel.cpp
 */
 
-#include "Dynamixel.h"
+#include "../include/Dynamixel.h"
 
 uint8_t DynamixelPacket::checkSum()
 {

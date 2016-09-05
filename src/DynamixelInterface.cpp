@@ -1,5 +1,5 @@
 
-#include "DynamixelInterface.h"
+#include "../include/DynamixelInterface.h"
 
 
 DynamixelInterface *createSerialInterface(char *serialPort)

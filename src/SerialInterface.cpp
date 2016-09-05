@@ -2,7 +2,7 @@
 // Created by discord on 23/08/16.
 //
 
-#include "SerialInterface.hpp"
+#include "../include/SerialInterface.hpp"
 
 SerialInterface::SerialInterface(char *serialport) : serialPort(serialport)
 {

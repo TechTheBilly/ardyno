@@ -3,8 +3,8 @@
 //
 
 #include <thread>
-#include "DynamixelInterface.h"
-#include "DynamixelMotor.h"
+#include "../include/DynamixelInterface.h"
+#include "../include/DynamixelMotor.h"
 
 void delay(int time)
 {
