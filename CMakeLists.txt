@@ -24,6 +24,6 @@ add_library(ardyno SHARED ${SOURCES})
 
 #Set the location for library installation -- i.e., /usr/lib in this case
 # not really necessary in this example. Use "sudo make install" to apply
-install(TARGETS ardyno DESTINATION /usr/lib)
+#install(TARGETS ardyno DESTINATION /usr/lib)
 
 #add_executable(ardyno ${SOURCE_FILES})
