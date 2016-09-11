@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.4)
 project(ardyno)
 set(CMAKE_BUILD_TYPE Release)
 
@@ -21,5 +21,6 @@ file(GLOB SOURCES "src/*.cpp")
 
 #Generate the shared library from the sources
 add_library(ardyno SHARED ${SOURCES})
+install(TARGETS ardyno LIBRARY DESTINATION lib)
 
 #add_executable(ardyno ${SOURCES})
