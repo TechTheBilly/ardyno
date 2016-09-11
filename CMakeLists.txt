@@ -21,6 +21,6 @@ file(GLOB SOURCES "src/*.cpp")
 
 #Generate the shared library from the sources
 add_library(ardyno SHARED ${SOURCES})
-install(TARGETS ardyno LIBRARY DESTINATION /lib)
+install(TARGETS ardyno LIBRARY DESTINATION lib)
 
 #add_executable(ardyno ${SOURCES})
