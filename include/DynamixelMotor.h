@@ -13,6 +13,8 @@
 */
 enum DynMotorAddress
 {
+
+    DYN_ADDRESSS_ID = 0x03,
 	/** \brief Clockwise angle limit, uint16_t , writable */
 	DYN_ADDRESS_CW_LIMIT		=0x06,
 	/** \brief Counnter clockwise angle limit, uint16_t , writable */
@@ -37,6 +39,8 @@ class DynamixelMotor:public DynamixelDevice
 	public:
 	
 	DynamixelMotor(DynamixelInterface &aInterface, DynamixelID aId);
+
+    void setID(uint8_t new_id);
 	
 	void wheelMode();
 	void jointMode(uint16_t aCWLimit=0, uint16_t aCCWLimit=0x3FF);

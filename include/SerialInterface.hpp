@@ -29,6 +29,8 @@ public:
 
     void closeSerial();
 
+    void rs485_receiver(int on);
+
 private:
 
     char * serialPort;

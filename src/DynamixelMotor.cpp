@@ -39,6 +39,11 @@ void DynamixelMotor::led(uint8_t aState)
 	write(DYN_ADDRESS_LED, aState);
 }
 
+void DynamixelMotor::setID(uint8_t new_id)
+{
+    write(DYN_ADDRESS_ID, new_id);
+}
+
 uint16_t DynamixelMotor::currentPosition()
 {
 	uint16_t currentPosition;

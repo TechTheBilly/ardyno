@@ -92,7 +92,7 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 	*/
 	void sendPacket(const DynamixelPacket &aPacket)
 	{
-		writeMode();
+		//writeMode();
 	
 		mStream.writeByte(0xFF);
 		mStream.writeByte(0xFF);
@@ -129,7 +129,7 @@ class DynamixelInterfaceImpl:public DynamixelInterface
 		}
 		mStream.writeByte(aPacket.mCheckSum);
 		mStream.flush();
-		readMode();
+		//readMode();
 	}
 	/**
 	 * \brief Receive a packet on bus

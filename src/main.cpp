@@ -3,6 +3,7 @@
 //
 
 #include <thread>
+#include <stdlib.h>
 #include "../include/DynamixelInterface.h"
 #include "../include/DynamixelMotor.h"
 
@@ -14,24 +15,33 @@ void delay(int time)
 
 int main()
 {
-    for(DynamixelID i=227 ; i<256 ; i++)
-    {
-        DynamixelInterface *interface=createSerialInterface((char *) "/dev/ttyUSB0");
-        DynamixelMotor motor(*interface, i); //TODO check ID for AX12
 
-        std::cout << "      " << (int)i << std::endl;
-        delay(100);
-        interface->begin(9600);
-        delay(100);
+    DynamixelInterface *interface=createSerialInterface((char *) "/dev/ttyUSB0");
+    DynamixelMotor motor(*interface, 1); //TODO check ID for AX12
 
-        motor.init();
-        motor.enableTorque();
+    delay(100);
+    interface->begin(9600);
+    delay(100);
 
-        // reset to middle position
-        motor.jointMode();
-        motor.speed(256);
-        motor.goalPosition(0x1ff);
-        delay(5000);
-        motor.wheelMode();
-    }
+    motor.write(0x04, (int)207);
+    motor.write(0x10, (uint8_t)1);
+
+    std::cout << std::to_string((int)motor.init()) << std::endl;
+
+    //motor.setID(0x01);
+
+    motor.enableTorque();
+
+    // reset to middle position
+    motor.jointMode();
+    motor.speed(256);
+    motor.goalPosition(0x1ff);
+
+    motor.write(0x19, true);
+
+    std::cout << std::to_string((int)motor.currentPosition()) << std::endl;
+
+
+    // delay(5000);
+    //motor.wheelMode();
 }

@@ -18,6 +18,9 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <exception>
+#include <sys/ioctl.h>
+#include <linux/types.h>
+#include <linux/serial.h>
 #include <unistd.h>			//Used for UART
 #include <fcntl.h>			//Used for UART
 #include <termios.h>		//Used for UART
@@ -309,7 +312,7 @@ DynamixelStatus DynamixelInterface::write(uint8_t aID, uint8_t aAddress, const T
 template<class T>
 DynamixelStatus DynamixelInterface::regWrite(uint8_t aID, uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel)
 {
-	return regWrite(aID, aAddress, uint8_t(sizeof(T)), (const uint8_t*)aData, aStatusReturnLevel);
+	return regWrite(aID, aAddress, uint8_t(sizeof(T)), (const uint8_t*)&aData, aStatusReturnLevel);
 }
 
 /**
